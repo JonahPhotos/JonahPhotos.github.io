@@ -20,6 +20,8 @@
       Instagram
     </a>
   </p>
+<p class="instruction-text"></p>
+</header>
 </header>
 
 <section class="gallery">
@@ -70,6 +72,14 @@
   <a href="images/35_website.webp"><img src="thumbnails/35_website.webp" alt="Photo 35" loading="lazy"></a>
 
 </section>
+<script>
+  const instruction = document.querySelector('.instruction-text');
 
+  if (window.innerWidth <= 768) {
+    instruction.textContent = "Tap an image to enlarge";
+  } else {
+    instruction.textContent = "Click an image to enlarge";
+  }
+</script>
 </body>
 </html>
