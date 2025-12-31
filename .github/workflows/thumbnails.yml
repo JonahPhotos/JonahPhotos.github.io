@@ -6,16 +6,21 @@ on:
       - 'images/**'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install ImageMagick
-        run: sudo apt-get install -y imagemagick
+      - name: Install ImageMagick and enable policies
+        run: |
+          sudo apt-get install -y imagemagick
+          sudo sed -i 's/<policy domain="coder" rights="none"/<policy domain="coder" rights="read|write"/' /etc/ImageMagick-6/policy.xml
 
       - name: Create thumbnails directory
         run: mkdir -p thumbnails
