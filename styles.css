@@ -45,3 +45,11 @@ a {
   transform: scale(1.01);
   transition: 0.2s;
 }
+
+.instruction-text {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
