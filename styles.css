@@ -1,108 +1,82 @@
-/* General Styles */
 :root {
-    --bg-color: #0f172a;
-    --text-color: #f8fafc;
-    --accent-color: #38bdf8;
-    --card-bg: #1e293b;
+    --bg: #0f172a;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --card: #1e293b;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    margin: 0;
-    padding: 20px;
-}
-
-header {
-    max-width: 1200px;
-    margin: 0 auto 40px auto;
-}
-
-h1 { font-size: 2.5rem; margin: 10px 0; }
-
-.back-link {
-    text-decoration: none;
-    color: var(--accent-color);
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-/* Album Grid (Index Page) */
-.album-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.album-card {
-    background: var(--card-bg);
-    border-radius: 15px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-}
-
-.album-card:hover { transform: translateY(-5px); }
-
-.album-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.album-info { padding: 15px; text-align: center; }
-.album-info h3 { margin: 0; font-size: 1.2rem; }
-
-/* Photo Grid (Month Pages) */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.photo-item img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: 8px;
-    transition: opacity 0.2s;
-}
-
-.photo-item:hover img { opacity: 0.8; }
-
-footer {
+    font-family: sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0; padding: 20px;
     text-align: center;
-    margin-top: 50px;
-    padding-bottom: 50px;
 }
 
-footer a {
-    color: var(--accent-color);
-    text-decoration: none;
-    border: 1px solid var(--accent-color);
-    padding: 10px 20px;
-    border-radius: 5px;
+/* NAVIGATION */
+.top-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
 }
-.all-photos-link {
+
+.nav-btn-link, .all-photos-link {
+    text-decoration: none !important;
+    color: var(--accent) !important;
+    border: 2px solid var(--accent) !important;
+    padding: 10px 25px !important;
+    border-radius: 30px !important;
+    font-weight: bold !important;
     display: inline-block;
-    margin-top: 40px;
-    padding: 12px 24px;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    text-decoration: none;
-    border-radius: 8px;
-    transition: 0.3s;
 }
 
-.all-photos-link:hover {
-    background: var(--accent);
-    color: var(--bg);
+.nav-btn-link:hover, .all-photos-link:hover {
+    background: var(--accent) !important;
+    color: var(--bg) !important;
 }
+
+/* GRIDS */
+.album-grid, .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px; max-width: 1200px; margin: 0 auto;
+}
+
+.album-card { background: var(--card); border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; }
+.album-card img { width: 100%; height: 200px; object-fit: cover; }
+.photo-item img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; cursor: pointer; }
+
+/* LIGHTBOX - FORCED TO TOP */
+.lightbox-overlay {
+    display: none;
+    position: fixed !important;
+    top: 0 !important; left: 0 !important;
+    width: 100vw !important; height: 100vh !important;
+    background: rgba(0, 0, 0, 0.9) !important;
+    z-index: 99999 !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.lb-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+#lightbox-img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+#lb-caption { margin-top: 15px; color: #ccc; }
+
+.lb-close { position: absolute; top: 20px; right: 40px; font-size: 50px; color: white; cursor: pointer; }
+.lb-prev, .lb-next { position: absolute; top: 50%; font-size: 60px; color: white; cursor: pointer; padding: 20px; transform: translateY(-50%); }
+.lb-prev { left: 20px; }
+.lb-next { right: 20px; }
