@@ -52,13 +52,30 @@ for p in photos:
     make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(LARGE, p["ym"]), p["name"], 1600)
     make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(THUMBS, p["ym"]), p["name"], 400)
 
-# --- Updated Link with Cache Buster ---
-head = f'<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="styles.css?v={datetime.now().timestamp()}"></head>'
+# --- Updated Head with Device Detection Script ---
+head = f"""<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css?v={datetime.now().timestamp()}">
+    <style>
+        .device-instruction {{ font-size: 0.9rem; color: #888; margin-top: -20px; margin-bottom: 20px; font-style: italic; }}
+    </style>
+</head>"""
 
 def get_header(title, show_home=True):
     h = f'<a href="index.html" class="nav-btn-link">Home</a>' if show_home else ""
     i = f'<a href="{INSTA_LINK}" target="_blank" class="nav-btn-link">Instagram</a>'
-    return f"<header><nav class='top-nav'>{h} {i}</nav><h1>{title}</h1></header>"
+    # Adding the instruction div here
+    instruction = '<div id="instruction" class="device-instruction"></div>'
+    script = """<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const text = isMobile ? "Tap to enlarge" : "Click to enlarge";
+            const el = document.getElementById("instruction");
+            if (el) el.innerText = text;
+        });
+    </script>"""
+    return f"<header><nav class='top-nav'>{h} {i}</nav><h1>{title}</h1>{instruction}{script}</header>"
 
 lb_code = """
 <div id="lightbox" class="lightbox-overlay">
