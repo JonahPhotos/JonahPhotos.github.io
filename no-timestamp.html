@@ -1,1 +1,15 @@
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="styles.css"><title>My Gallery</title></head><body><header><a href='index.html' class='back-link'>← Back to Albums</a><h1>No Timestamp Data</h1></header><main class='gallery-grid'><a href="images/large/no-timestamp/stacked-8.webp" target="_blank" class="photo-item"><img src="images/thumbs/no-timestamp/stacked-8.webp" loading="lazy"></a><a href="images/large/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp" target="_blank" class="photo-item"><img src="images/thumbs/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp" loading="lazy"></a><a href="images/large/no-timestamp/Final.webp" target="_blank" class="photo-item"><img src="images/thumbs/no-timestamp/Final.webp" loading="lazy"></a><a href="images/large/no-timestamp/DSCF2270_lapl6_ap306.webp" target="_blank" class="photo-item"><img src="images/thumbs/no-timestamp/DSCF2270_lapl6_ap306.webp" loading="lazy"></a><a href="images/large/no-timestamp/Composite.webp" target="_blank" class="photo-item"><img src="images/thumbs/no-timestamp/Composite.webp" loading="lazy"></a><a href="images/large/no-timestamp/Andromeda Galaxy (M31).webp" target="_blank" class="photo-item"><img src="images/thumbs/no-timestamp/Andromeda Galaxy (M31).webp" loading="lazy"></a></main></body></html>
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Gallery</title>
+</head><body><header><nav><a href="index.html">Home</a> | <a href="https://www.instagram.com/your_username" target="_blank">Instagram</a></nav><h1>No Timestamp Data</h1></header> <main class='gallery-grid'><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/stacked-8.webp')"><img src="images/thumbs/no-timestamp/stacked-8.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp')"><img src="images/thumbs/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/Final.webp')"><img src="images/thumbs/no-timestamp/Final.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/DSCF2270_lapl6_ap306.webp')"><img src="images/thumbs/no-timestamp/DSCF2270_lapl6_ap306.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/Composite.webp')"><img src="images/thumbs/no-timestamp/Composite.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/Andromeda Galaxy (M31).webp')"><img src="images/thumbs/no-timestamp/Andromeda Galaxy (M31).webp" loading="lazy"></div></main>
+<div id="lightbox" onclick="this.style.display='none'">
+    <img id="lightbox-img" src="">
+</div>
+<script>
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+</script></body></html>
