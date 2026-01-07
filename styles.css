@@ -91,3 +91,18 @@ footer a {
     padding: 10px 20px;
     border-radius: 5px;
 }
+.all-photos-link {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 24px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.all-photos-link:hover {
+    background: var(--accent);
+    color: var(--bg);
+}
