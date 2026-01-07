@@ -3,13 +3,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Gallery</title>
-</head><body><header><nav><a href="index.html">Home</a> | <a href="https://www.instagram.com/your_username" target="_blank">Instagram</a></nav><h1>No Timestamp Data</h1></header> <main class='gallery-grid'><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/stacked-8.webp')"><img src="images/thumbs/no-timestamp/stacked-8.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp')"><img src="images/thumbs/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/Final.webp')"><img src="images/thumbs/no-timestamp/Final.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/DSCF2270_lapl6_ap306.webp')"><img src="images/thumbs/no-timestamp/DSCF2270_lapl6_ap306.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/Composite.webp')"><img src="images/thumbs/no-timestamp/Composite.webp" loading="lazy"></div><div class="photo-item" onclick="openLightbox('images/large/no-timestamp/Andromeda Galaxy (M31).webp')"><img src="images/thumbs/no-timestamp/Andromeda Galaxy (M31).webp" loading="lazy"></div></main>
-<div id="lightbox" onclick="this.style.display='none'">
+</head><body><header><nav><a href="index.html" class="nav-btn-link">Home</a> <a href="https://www.instagram.com/jo.nah8309/" target="_blank" class="nav-btn-link">Instagram</a></nav><h1>No Timestamp Data</h1></header><main class='gallery-grid'><div class="photo-item" data-large="images/large/no-timestamp/stacked-8.webp" data-name="stacked-8.JPG" onclick="openLightbox(0)"><img src="images/thumbs/no-timestamp/stacked-8.webp" loading="lazy"></div><div class="photo-item" data-large="images/large/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp" data-name="October 7 2025 Harvest moon Supermoon_.png" onclick="openLightbox(1)"><img src="images/thumbs/no-timestamp/October 7 2025 Harvest moon Supermoon_.webp" loading="lazy"></div><div class="photo-item" data-large="images/large/no-timestamp/Final.webp" data-name="Final.png" onclick="openLightbox(2)"><img src="images/thumbs/no-timestamp/Final.webp" loading="lazy"></div><div class="photo-item" data-large="images/large/no-timestamp/DSCF2270_lapl6_ap306.webp" data-name="DSCF2270_lapl6_ap306.png" onclick="openLightbox(3)"><img src="images/thumbs/no-timestamp/DSCF2270_lapl6_ap306.webp" loading="lazy"></div><div class="photo-item" data-large="images/large/no-timestamp/Composite.webp" data-name="Composite.png" onclick="openLightbox(4)"><img src="images/thumbs/no-timestamp/Composite.webp" loading="lazy"></div><div class="photo-item" data-large="images/large/no-timestamp/Andromeda Galaxy (M31).webp" data-name="Andromeda Galaxy (M31).png" onclick="openLightbox(5)"><img src="images/thumbs/no-timestamp/Andromeda Galaxy (M31).webp" loading="lazy"></div></main>
+<div id="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <span class="nav-btn prev" onclick="changeImage(-1)">&#10094;</span>
     <img id="lightbox-img" src="">
+    <div id="caption"></div>
+    <span class="nav-btn next" onclick="changeImage(1)">&#10095;</span>
 </div>
+
 <script>
-    function openLightbox(src) {
-        document.getElementById('lightbox-img').src = src;
+    let images = [];
+    let currentIndex = 0;
+
+    function initLightbox() {
+        const items = document.querySelectorAll('.photo-item');
+        images = Array.from(items).map(item => ({
+            large: item.getAttribute('data-large'),
+            name: item.getAttribute('data-name')
+        }));
+    }
+
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
         document.getElementById('lightbox').style.display = 'flex';
     }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
+    function changeImage(dir) {
+        currentIndex += dir;
+        if (currentIndex >= images.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = images.length - 1;
+        updateLightbox();
+    }
+
+    function updateLightbox() {
+        const img = document.getElementById('lightbox-img');
+        const cap = document.getElementById('caption');
+        img.src = images[currentIndex].large;
+        cap.innerText = images[currentIndex].name;
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', e => {
+        if (document.getElementById('lightbox').style.display === 'flex') {
+            if (e.key === "Escape") closeLightbox();
+            if (e.key === "ArrowRight") changeImage(1);
+            if (e.key === "ArrowLeft") changeImage(-1);
+        }
+    });
+
+    window.onload = initLightbox;
 </script></body></html>
