@@ -29,7 +29,7 @@ safe_clear_contents(THUMBS)
 
 
 def get_photo_metadata(path):
-    """Checks for 'Astro' tag in description and extracts date."""
+    """Checks multiple EXIF tags for 'Astro' and extracts date."""
     is_astro = False
     date = None
     has_exif = False
@@ -37,18 +37,30 @@ def get_photo_metadata(path):
     try:
         exif_dict = piexif.load(path)
 
-        # Check Image Description for "Astro" (case-insensitive)
-        description = exif_dict.get("0th", {}).get(piexif.ImageIFD.ImageDescription)
-        if description and b"astro" in description.lower():
-            is_astro = True
+        # 1. Check Standard Description (0th IFD)
+        desc = exif_dict.get("0th", {}).get(piexif.ImageIFD.ImageDescription)
+
+        # 2. Check Windows 'Title' (XPTitle is stored in 0th IFD as byte sequence)
+        win_title = exif_dict.get("0th", {}).get(piexif.ImageIFD.XPTitle)
+
+        # 3. Check User Comment (Exif IFD)
+        comment = exif_dict.get("Exif", {}).get(piexif.ExifIFD.UserComment)
+
+        # Helper to search for 'astro' in various formats
+        for field in [desc, win_title, comment]:
+            if field:
+                # Convert bytes to string safely and check for 'astro'
+                if b"astro" in str(field).lower().encode():
+                    is_astro = True
+                    break
 
         # Get EXIF Date
         d = exif_dict["Exif"].get(piexif.ExifIFD.DateTimeOriginal)
         if d:
             date = datetime.strptime(d.decode(), "%Y:%m:%d %H:%M:%S")
             has_exif = True
-    except:
-        pass
+    except Exception as e:
+        print(f"Error reading metadata for {path}: {e}")
 
     if not date:
         date = datetime.fromtimestamp(os.path.getmtime(path))
@@ -177,7 +189,7 @@ sorted_groups = sorted(groups, key=lambda x: (x == "Astro", x != "no-timestamp",
 for g in sorted_groups:
     first = next(p for p in photos if p["ym"] == g)
     if g == "Astro":
-        label = "🔭 Astrophotography"
+        label = "Astrophotography"
     elif g == "no-timestamp":
         label = "No Timestamp"
     else:
