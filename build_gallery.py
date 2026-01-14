@@ -9,25 +9,52 @@ LARGE = "images/large"
 THUMBS = "images/thumbs"
 INSTA_LINK = "https://www.instagram.com/jo.nah8309/"
 
+
 def safe_clear_contents(folder_path):
     if os.path.exists(folder_path):
         for item in os.listdir(folder_path):
             item_path = os.path.join(folder_path, item)
             if item == ".gitkeep": continue
-            if os.path.isfile(item_path): os.unlink(item_path)
-            elif os.path.isdir(item_path): shutil.rmtree(item_path)
-    else: os.makedirs(folder_path, exist_ok=True)
+            if os.path.isfile(item_path):
+                os.unlink(item_path)
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+    else:
+        os.makedirs(folder_path, exist_ok=True)
 
+
+# Clear old processed images
 safe_clear_contents(LARGE)
 safe_clear_contents(THUMBS)
 
-def get_exif_date(path):
+
+def get_photo_metadata(path):
+    """Checks for 'Astro' tag in description and extracts date."""
+    is_astro = False
+    date = None
+    has_exif = False
+
     try:
-        exif = piexif.load(path)
-        d = exif["Exif"].get(piexif.ExifIFD.DateTimeOriginal)
-        if d: return datetime.strptime(d.decode(), "%Y:%m:%d %H:%M:%S"), True
-    except: pass
-    return datetime.fromtimestamp(os.path.getmtime(path)), False
+        exif_dict = piexif.load(path)
+
+        # Check Image Description for "Astro" (case-insensitive)
+        description = exif_dict.get("0th", {}).get(piexif.ImageIFD.ImageDescription)
+        if description and b"astro" in description.lower():
+            is_astro = True
+
+        # Get EXIF Date
+        d = exif_dict["Exif"].get(piexif.ExifIFD.DateTimeOriginal)
+        if d:
+            date = datetime.strptime(d.decode(), "%Y:%m:%d %H:%M:%S")
+            has_exif = True
+    except:
+        pass
+
+    if not date:
+        date = datetime.fromtimestamp(os.path.getmtime(path))
+
+    return date, is_astro, has_exif
+
 
 def make_resized_webp(src, dest_folder, original_name, max_size):
     with Image.open(src) as img:
@@ -38,21 +65,37 @@ def make_resized_webp(src, dest_folder, original_name, max_size):
         os.makedirs(dest_folder, exist_ok=True)
         img.save(final_path, format="WEBP", quality=80)
 
+
+# 1. Process all photos in the originals folder
 photos = []
 for name in os.listdir(ORIG):
     if name.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
         path = os.path.join(ORIG, name)
-        date, has_exif = get_exif_date(path)
-        ym = date.strftime("%Y-%m") if has_exif else "no-timestamp"
-        photos.append({"name": name, "date": date, "ym": ym, "clean": os.path.splitext(name)[0], "exif": has_exif})
+        date, is_astro, has_exif = get_photo_metadata(path)
 
-photos.sort(key=lambda x: (x["exif"], x["date"]), reverse=True)
+        # Assign folder name: Astro takes priority over date
+        if is_astro:
+            ym = "Astro"
+        else:
+            ym = date.strftime("%Y-%m") if has_exif else "no-timestamp"
 
+        photos.append({
+            "name": name,
+            "date": date,
+            "ym": ym,
+            "clean": os.path.splitext(name)[0],
+            "exif": has_exif
+        })
+
+# Sort photos for the "All Photos" view
+photos.sort(key=lambda x: (x["date"]), reverse=True)
+
+# 2. Save processed images into their assigned folders
 for p in photos:
     make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(LARGE, p["ym"]), p["name"], 1600)
     make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(THUMBS, p["ym"]), p["name"], 400)
 
-# --- Updated Head with Device Detection Script ---
+# --- HTML Generation Elements ---
 head = f"""<html><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,10 +105,10 @@ head = f"""<html><head>
     </style>
 </head>"""
 
+
 def get_header(title, show_home=True):
     h = f'<a href="index.html" class="nav-btn-link">Home</a>' if show_home else ""
     i = f'<a href="{INSTA_LINK}" target="_blank" class="nav-btn-link">Instagram</a>'
-    # Adding the instruction div here
     instruction = '<div id="instruction" class="device-instruction"></div>'
     script = """<script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -76,6 +119,7 @@ def get_header(title, show_home=True):
         });
     </script>"""
     return f"<header><nav class='top-nav'>{h} {i}</nav><h1>{title}</h1>{instruction}{script}</header>"
+
 
 lb_code = """
 <div id="lightbox" class="lightbox-overlay">
@@ -113,6 +157,7 @@ lb_code = """
     });
 </script>"""
 
+
 def build_grid(subset):
     g = "<main class='gallery-grid'>"
     for i, p in enumerate(subset):
@@ -121,18 +166,36 @@ def build_grid(subset):
         g += f'<div class="photo-item" data-large="{l}" data-name="{p["name"]}" onclick="openLightbox({i})"><img src="{t}"></div>'
     return g + "</main>"
 
-# Index
+
+# 3. Generate the Homepage (Index)
 idx = f"{head}<body>{get_header('Gallery', False)}<main class='album-grid'>"
-groups = sorted({p["ym"] for p in photos}, reverse=True)
-sorted_groups = [g for g in groups if g != "no-timestamp"] + (["no-timestamp"] if "no-timestamp" in groups else [])
+
+# Unique list of folders sorted: Astro first, then dates, then no-timestamp
+groups = list(set(p["ym"] for p in photos))
+sorted_groups = sorted(groups, key=lambda x: (x == "Astro", x != "no-timestamp", x), reverse=True)
+
 for g in sorted_groups:
     first = next(p for p in photos if p["ym"] == g)
-    label = "No Timestamp" if g == "no-timestamp" else g
-    idx += f'<a href="{g}.html" class="album-card"><img src="images/thumbs/{g}/{first["clean"]}.webp"><p>{label}</p></a>'
-idx += f'</main><footer><br><a href="all.html" class="all-photos-link">View All Photos</a></footer></body></html>'
-with open("index.html", "w") as f: f.write(idx)
+    if g == "Astro":
+        label = "🔭 Astrophotography"
+    elif g == "no-timestamp":
+        label = "No Timestamp"
+    else:
+        label = g
 
-# All Photos / Months
-with open("all.html", "w") as f: f.write(f"{head}<body>{get_header('All Photos')}{build_grid(photos)}{lb_code}</body></html>")
+    idx += f'<a href="{g}.html" class="album-card"><img src="images/thumbs/{g}/{first["clean"]}.webp"><p>{label}</p></a>'
+
+idx += '</main><footer><br><a href="all.html" class="all-photos-link">View All Photos</a></footer></body></html>'
+
+with open("index.html", "w") as f:
+    f.write(idx)
+
+# 4. Generate the Month/Category Pages
+with open("all.html", "w") as f:
+    f.write(f"{head}<body>{get_header('All Photos')}{build_grid(photos)}{lb_code}</body></html>")
+
 for g in groups:
-    with open(f"{g}.html", "w") as f: f.write(f"{head}<body>{get_header(g)}{build_grid([p for p in photos if p['ym']==g])}{lb_code}</body></html>")
+    subset = [p for p in photos if p['ym'] == g]
+    title = "Astrophotography" if g == "Astro" else g
+    with open(f"{g}.html", "w") as f:
+        f.write(f"{head}<body>{get_header(title)}{build_grid(subset)}{lb_code}</body></html>")
