@@ -7,7 +7,7 @@ from datetime import datetime
 ORIG = "images/originals"
 LARGE = "images/large"
 THUMBS = "images/thumbs"
-INSTA_LINK = "https://www.instagram.com/jo.nah8309/"
+INSTA_LINK = "https://www.instagram.com/jonah_photos_/"
 
 
 def safe_clear_contents(folder_path):
