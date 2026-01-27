@@ -94,8 +94,27 @@ for p in photos:
     make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(LARGE, p["ym"]), p["name"], 1600)
     make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(THUMBS, p["ym"]), p["name"], 400)
 
-head = f"""<html><link rel="icon" href="https://static.vecteezy.com/system/resources/previews/024/758/838/original/camera-icon-clipart-transparent-background-free-png.png"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="styles.css?v={datetime.now().timestamp()}"><style>.device-instruction {{ font-size: 0.9rem; color: #888; margin-top: -20px; margin-bottom: 20px; font-style: italic; }}</style></head>"""
+head = f"""
+<html>
+<head>
+    <link rel="icon" href="https://static.vecteezy.com/system/resources/previews/024/758/838/original/camera-icon-clipart-transparent-background-free-png.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css?v={datetime.now().timestamp()}">
+    
+    <style>
+        .device-instruction {{ font-size: 0.9rem; color: #888; margin-top: -20px; margin-bottom: 20px; font-style: italic; }}
+    </style>
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXBTDYF7EX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {{ dataLayer.push(arguments); }}
+      gtag('js', new Date());
+      gtag('config', 'G-PXBTDYF7EX');
+    </script>
+</head>
+"""
 def get_header(title, show_home=True):
     h = f'<a href="index.html" class="nav-btn-link">Home</a>' if show_home else ""
     i = f'<a href="{INSTA_LINK}" target="_blank" class="nav-btn-link">Instagram</a>'
