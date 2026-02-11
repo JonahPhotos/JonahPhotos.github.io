@@ -1,0 +1,21 @@
+
+<html>
+<head>
+    <link rel="icon" href="https://static.vecteezy.com/system/resources/previews/024/758/838/original/camera-icon-clipart-transparent-background-free-png.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css?v=1770799577.735439">
+    
+    <style>
+        .device-instruction { font-size: 0.9rem; color: #888; margin-top: -20px; margin-bottom: 20px; font-style: italic; }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXBTDYF7EX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-PXBTDYF7EX');
+    </script>
+</head>
+<body><header><nav class='top-nav'><a href="index.html" class="nav-btn-link">Home</a> <a href="https://www.instagram.com/jonah_photos_/" target="_blank" class="nav-btn-link">Instagram</a></nav><h1>2026-02</h1><div id="instruction" class="device-instruction"></div><script>document.addEventListener("DOMContentLoaded", function() { const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); const text = isMobile ? "Tap to enlarge" : "Click to enlarge"; const el = document.getElementById("instruction"); if (el) el.innerText = text; });</script></header><main class='gallery-grid'><div class="photo-item" data-large="images/large/2026-02/DSCF3295.webp" data-name="DSCF3295.JPG" onclick="openLightbox(0)"><img src="images/thumbs/2026-02/DSCF3295.webp" loading="lazy" alt="DSCF3295.JPG"></div></main><div id="lightbox" class="lightbox-overlay"><span class="lb-close" onclick="closeLightbox()">&times;</span><span class="lb-prev" onclick="changeImage(-1)">&#10094;</span><div class="lb-content"><img id="lightbox-img" src=""><div id="lb-caption"></div></div><span class="lb-next" onclick="changeImage(1)">&#10095;</span></div><script>let images = []; let currentIndex = 0; function openLightbox(index) { images = Array.from(document.querySelectorAll('.photo-item')).map(i => ({ large: i.getAttribute('data-large'), name: i.getAttribute('data-name') })); currentIndex = index; updateLightbox(); document.getElementById('lightbox').style.display = 'flex'; } function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; } function changeImage(dir) { currentIndex = (currentIndex + dir + images.length) % images.length; updateLightbox(); } function updateLightbox() { document.getElementById('lightbox-img').src = images[currentIndex].large; document.getElementById('lb-caption').innerText = images[currentIndex].name; } document.addEventListener('keydown', e => { if (e.key === "Escape") closeLightbox(); if (e.key === "ArrowRight") changeImage(1); if (e.key === "ArrowLeft") changeImage(-1); });</script></body></html>
