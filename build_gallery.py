@@ -60,17 +60,13 @@ def make_resized_webp(src, dest_folder, original_name, max_size):
         
         # Use High-Quality Lanczos resampling
         img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
-        
-        # Apply a subtle sharpen to thumbnails to keep them crisp
-        if max_size <= 400:
-            img = img.filter(ImageFilter.SHARPEN)
             
         base = os.path.splitext(original_name)[0]
         final_path = os.path.join(dest_folder, f"{base}.webp")
         os.makedirs(dest_folder, exist_ok=True)
         
         # quality 82 is the sweet spot; method 6 is slower but better compression
-        img.save(final_path, format="WEBP", quality=82, method=6)
+        img.save(final_path, format="WEBP", quality=90, method=6)
 
 photos = []
 for name in os.listdir(ORIG):
@@ -92,7 +88,7 @@ photos.sort(key=lambda x: (x["date"]), reverse=True)
 
 for p in photos:
     make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(LARGE, p["ym"]), p["name"], 1600)
-    make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(THUMBS, p["ym"]), p["name"], 400)
+    make_resized_webp(os.path.join(ORIG, p["name"]), os.path.join(THUMBS, p["ym"]), p["name"], 600)
 
 head = f"""
 <html>
